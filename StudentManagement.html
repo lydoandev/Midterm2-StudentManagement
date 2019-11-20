@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Student Management</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    <style>
+        #listStudent {
+            margin-top: 50px;
+        }
+
+        .panel-primary {
+            margin-top: 100px;
+        }
+
+        #formAdd {
+            margin-top: 30px;
+        }
+
+        .panel-info {
+            margin-top: 30px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h4>STUDENT MANAGEMENT</h4>
+            </div>
+            <div class="panel-body">
+                <div class="col-md-offset-1 col-md-10">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <button class="btn btn-primary" onclick="catchAdd()" id="catchAdd"><i
+                                    class="fa fa-plus-square fa-2x"></i></button>
+                        </div>
+                        <div class="col-md-9">
+
+                        </div>
+                    </div>
+                    <div id="formAdd" style="display: none;">
+                        <div class="alert alert-danger" style="display: none" id="errAlert">
+                            Indicates a dangerous or potentially negative action.
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <input class="form-control" id="name" placeholder="Enter student name">
+                                <p style="display: none; color: red;" id="nameErr"></p>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <select name="class" class="form-control" id="class">
+                                    <option value="PNV20A">PNV20A</option>
+                                    <option value="PNV20B">PNV20B</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="form-group col-sm-6">
+                                <input class="form-control" id="jsScore" placeholder="Enter student's JS score">
+                                <p style="display: none; color: red;" id="jsScoreErr"></p>
+                            </div>
+                            <div class="form-group col-sm-6">
+                                <input class="form-control" id="andScore" placeholder="Enter student's android score">
+                                <p style="display: none; color: red;" id="andScoreErr"></p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-5" style="margin-bottom: 30px;">
+                                <button class="btn btn-primary" id="btnControl" onclick="addStudent()">ADD</button>
+                                <button class="btn btn-danger" id="btnCancel" onclick="cancel()">CANCEL</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-info">
+                        <div class="panel-heading">STUDENT LIST</div>
+                        <div class="panel-body">
+                            <div class="row" style="margin-top: 30px;">
+                                <div class="col-xs-6 col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Search" id="txtSearch"
+                                            oninput="search()" />
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-primary" onclick="search()">
+                                                <span class="fa fa-search"></span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-2 col-md-offset-1">
+                                    <button class="btn btn-primary" onclick="sortName()"><i
+                                            class="fa fa-sort-alpha-asc"></i>
+                                        SORT NAME</button>
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="btn btn-primary" onclick="sortScore()"><i
+                                            class="fa fa-sort-numeric-desc" id="sortScoreIcon"></i>
+                                        SORT SCORE</button>
+                                </div>
+                            </div>
+                            <table id="listStudent" class="table table-bordered">
+                                <thead class="thead-dark">
+                                    <th>No.</th>
+                                    <th>Student Name</th>
+                                    <th>Class</th>
+                                    <th>JS Score</th>
+                                    <th>Android Score</th>
+                                    <th>Average Score</th>
+                                    <th>Result</th>
+                                    <th>Actions</th>
+                                </thead>
+
+                                <tbody id="tbody">
+
+                                </tbody>
+                            </table>
+
+
+
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-offset-9 col-md-3" style="margin-bottom: 40px">
+                            <button onclick="showStatistic()" class="btn btn-success">STATISTIC</button>
+                        </div>
+                    </div>
+
+                    <div id="statistic" style="display: none;">
+                        <div class="panel panel-warning">
+                            <div class="panel-heading">STATISTIC</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    <thead class="thead-dark">
+                                        <th>Rate</th>
+                                        <th>Quantity(Students)</th>
+                                        <th>Percent</th>
+                                    </thead>
+
+                                    <tbody>
+                                        <tr>
+                                            <td>Very good</td>
+                                            <td id="vGQuantity"></td>
+                                            <td id="vGPercent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Good</td>
+                                            <td id="gQuantity"></td>
+                                            <td id="gPercent"></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Normal</td>
+                                            <td id="nQuantity"></td>
+                                            <td id="nPercent"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <div class="col-md-offset-9 col-md-3" style="margin-bottom: 40px">
+                                        <button onclick="showSuggestion()" class="btn btn-success">SUGGESTION</button>
+                                    </div>
+                                </div>
+
+                                <div id="suggestion" style="display: none;">
+                                    <div id="meetEdu">
+                                            <h2>Meet Educator List</h2>
+                                    </div>
+                                    <div id="tutorial">
+                                        <h2>Tutorial List</h2>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    </div>
+    <script>
+
+        var listStudent = JSON.parse(localStorage.getItem('students'));
+
+        var countSort = 2;
+
+        if (!listStudent) {
+            listStudent = [
+                {
+                    name: "Ly",
+                    className: "PNV20B",
+                    andScore: 10,
+                    jsScore: 8
+                },
+                {
+                    name: "Minh",
+                    className: "PNV20A",
+                    andScore: 8,
+                    jsScore: 8
+                },
+                {
+                    name: "Nhung",
+                    className: "PNV20B",
+                    andScore: 8,
+                    jsScore: 9
+                }
+            ];
+            localStorage.setItem("students", JSON.stringify(listStudent));
+        }
+
+
+        getData();
+        function getData() {
+            listStudent = JSON.parse(localStorage.getItem('students'))
+        }
+
+        getData();
+        displayListStudent(listStudent);
+
+        function addStudent() {
+            var name = document.getElementById("name").value;
+            var className = document.getElementById("class").value;
+            var jsScore = document.getElementById("jsScore").value;
+            var andScore = document.getElementById("andScore").value;
+
+            if (checkValidate(name, parseFloat(jsScore), parseFloat(andScore))) {
+                listStudent.push({ name, className, jsScore, andScore });
+                localStorage.setItem("students", JSON.stringify(listStudent));
+                document.getElementById("formAdd").style.display = "none";
+                document.getElementById("catchAdd").style.display = "block";
+                getData();
+                displayListStudent(listStudent);
+            }
+
+        }
+
+        function showStatistic() {
+            document.getElementById("statistic").style.display = "block";
+            var vGQuantity = 0;
+            var gQuantity = 0;
+            var nQuantity = 0;
+            getData();
+            listStudent.forEach(({ jsScore, andScore }) => {
+                var avr = calAverageScore(jsScore, andScore);
+                console.log(avr);
+                if (avr > 8) {
+                    vGQuantity++;
+                } else if (avr > 7) {
+                    gQuantity++;
+                } else {
+                    nQuantity++;
+                }
+            });
+
+            document.getElementById("vGQuantity").innerText = vGQuantity;
+            document.getElementById("gQuantity").innerText = gQuantity;
+            document.getElementById("nQuantity").innerText = nQuantity;
+
+            document.getElementById("vGPercent").innerText = vGQuantity * 100 / listStudent.length + "%";
+            document.getElementById("gPercent").innerText = gQuantity * 100 / listStudent.length + "%";
+            document.getElementById("nPercent").innerText = nQuantity * 100 / listStudent.length + "%";
+        }
+
+        function calAverageScore(a, b) {
+            return (parseFloat(a) + parseFloat(b)) / 2;
+        }
+
+        function catchAdd() {
+            openForm("add");
+            document.getElementById("name").value = "";
+            document.getElementById("class").value = "PNV20A";
+            document.getElementById("jsScore").value = "";
+            document.getElementById("andScore").value = "";
+        }
+
+        function search() {
+            var txtSearch = document.getElementById("txtSearch").value;
+            var result = [];
+            listStudent.forEach(item => {
+                if (item.name.toLowerCase().includes(txtSearch.toLowerCase()) || item.className.toLowerCase().includes(txtSearch.toLowerCase())) {
+                    result.push(item);
+                }
+            })
+            displayListStudent(result);
+        }
+
+        function openForm(action, index) {
+            document.getElementById("errAlert").style.display = "none";
+            document.getElementById("nameErr").style.display = "none";
+            document.getElementById("jsScoreErr").style.display = "none";
+            document.getElementById("andScoreErr").style.display = "none";
+
+            var form = document.getElementById("formAdd");
+            form.style.display = "block";
+            var btnUpdate = document.getElementById("btnControl");
+            if (action == "add") {
+                btnUpdate.innerText = "ADD";
+                btnUpdate.setAttribute("onclick", "addStudent()");
+            } else {
+                btnUpdate.innerText = "UPDATE";
+                btnUpdate.setAttribute("onclick", "update(" + index + ")");
+            }
+        }
+
+        function catchUpdate(index) {
+            openForm("update", index);
+            document.getElementById("name").value = listStudent[index].name;
+            document.getElementById("class").value = listStudent[index].className;
+            document.getElementById("jsScore").value = listStudent[index].jsScore;
+            document.getElementById("andScore").value = listStudent[index].andScore;
+        }
+
+        function update(index) {
+            var name = document.getElementById("name").value;
+            var className = document.getElementById("class").value;
+            var jsScore = document.getElementById("jsScore").value;
+            var andScore = document.getElementById("andScore").value;
+
+            if (checkValidate(name, parseFloat(jsScore), parseFloat(andScore))) {
+                listStudent[index].name = name;
+                listStudent[index].className = className;
+                listStudent[index].jsScore = jsScore;
+                listStudent[index].andScore = andScore;
+                document.getElementById("formAdd").style.display = "none";
+                localStorage.setItem("students", JSON.stringify(listStudent));
+                getData();
+                displayListStudent(listStudent);
+            }
+        }
+
+        function cancel() {
+            document.getElementById("formAdd").style.display = "none";
+            document.getElementById("formAdd").style.display = "none";
+        }
+
+        function checkValidate(name, jsScore, andScore) {
+            var nameErr = document.getElementById("nameErr");
+            var jsScoreErr = document.getElementById("jsScoreErr");
+            var andScoreErr = document.getElementById("andScoreErr");
+            var errAlert = document.getElementById("errAlert");
+            errAlert.innerText = "";
+            nameErr.innerText = "";
+            jsScoreErr.innerText = "";
+            andScoreErr.innerText = "";
+            console.log(andScore);
+            var err = 0;
+            if (name == "") {
+                nameErr.style.display = "block";
+                nameErr.innerText = "**Name is empty**";
+                err++;
+            }
+            if (jsScore < 0 || jsScore > 10 || !jsScore) {
+                jsScoreErr.style.display = "block";
+                jsScoreErr.innerText = "**Invalid score**";
+                err++;
+            }
+            if (andScore < 0 || andScore > 10 || !andScore) {
+                andScoreErr.style.display = "block";
+                andScoreErr.innerText = "**Invalid score**";
+                err++;
+            }
+            if (err > 0) {
+                errAlert.style.display = "block";
+                errAlert.innerText = "There are some errors. Please check errors below";
+                return 0;
+            } else return 1;
+        }
+
+        function displayListStudent(listStudent) {
+            document.getElementById("tbody").innerHTML = "";
+            if (listStudent.length > 0) {
+                listStudent.forEach(({ name, className, jsScore, andScore }, index) => {
+
+                    var avgScore = (parseFloat(jsScore) + parseFloat(andScore)) / 2;
+                    var result = "";
+                    var color = "";
+                    if (avgScore > 8) {
+                        result = "Very Good";
+                        color = "#ff8c1a";
+                    } else if (avgScore > 7) {
+                        result = "Good";
+                        color = "green";
+                    } else {
+                        result = "Normal";
+                        color = "gray";
+                    }
+                    let tr = document.createElement("tr");
+                    var id, name, score, button1, icon1, control, button2, icon2;
+
+                    id = document.createElement("td");
+                    id.innerText = (index + 1);
+
+                    txtName = document.createElement("td");
+                    txtName.innerText = name;
+
+                    txtClassName = document.createElement("td");
+                    txtClassName.innerText = className;
+
+                    txtJsScore = document.createElement("td");
+                    txtJsScore.innerText = jsScore;
+
+                    txtAndScore = document.createElement("td");
+                    txtAndScore.innerText = andScore;
+
+                    txtAvrScore = document.createElement("td");
+                    txtAvrScore.innerText = avgScore;
+
+                    txtResult = document.createElement("td");
+                    txtResult.innerText = result;
+                    txtResult.style.color = color;
+
+                    icon1 = document.createElement("i");
+                    icon1.className = "fa fa-trash";
+
+                    control = document.createElement("td");
+
+                    button1 = document.createElement("button");
+                    button1.className = "btn btn-danger";
+                    button1.setAttribute("onclick", "deleteItem(" + index + ")");
+
+                    icon2 = document.createElement("i");
+                    icon2.className = "fa fa-pencil-square-o";
+
+                    button2 = document.createElement("button");
+                    button2.className = "btn btn-primary";
+                    button2.setAttribute("onclick", "catchUpdate(" + index + ")");
+
+                    button1.appendChild(icon1);
+                    button2.appendChild(icon2);
+
+                    control.appendChild(button1);
+                    control.appendChild(button2);
+                    tr.appendChild(id);
+                    tr.appendChild(txtName);
+                    tr.appendChild(txtClassName);
+                    tr.appendChild(txtJsScore);
+                    tr.appendChild(txtAndScore);
+                    tr.appendChild(txtAvrScore);
+                    tr.appendChild(txtResult);
+                    tr.appendChild(control);
+                    document.getElementById("tbody").appendChild(tr);
+
+                    // displayContent.innerText= 
+                    //     "<td>" + (index + 1) + "</td>" +
+                    //     "<td>" + student.name + "</td>" +
+                    //     "<td> " + student.score + "</td>" +
+                    //     "<td><button onclick='deleteItem(" + index + ")' class='btn btn-danger' id='" + index + "'> <i class='fa fa-trash' aria-hidden='true'></i> </button></td>"
+                    //     ;
+                });
+
+            }
+
+        }
+
+        function deleteItem(index) {
+            var result = confirm("Are you sure want to delete?");
+            if (result) {
+                listStudent.splice(index, 1);
+                console.log("Hello");
+                localStorage.setItem("students", JSON.stringify(listStudent));
+                getData();
+                displayListStudent(listStudent);
+            }
+
+        }
+
+        function sortName() {
+            listStudent.sort(function (a, b) {
+                var nameA = a.name.toLowerCase(), nameB = b.name.toLowerCase();
+                if (nameA > nameB) //sort string ascending
+                    return -1;
+                if (nameA < nameB)
+                    return 1;
+                return 0; //default return value (no sorting)
+            });
+            displayListStudent(listStudent);
+        }
+
+        function sortScore() {
+            listStudent.sort(function (a, b) {
+                var scoreA = (parseFloat(a.jsScore) + parseFloat(a.andScore)) / 2, scoreB = (parseFloat(b.jsScore) + parseFloat(b.andScore)) / 2
+                if (scoreA > scoreB) //sort string ascending
+                    if (countSort % 2 == 0) return -1;
+                    else return 1;
+
+                if (scoreA < scoreB)
+                    if (countSort % 2 == 0) return 1;
+                    else return -1;
+                return 0; //default return value (no sorting)
+            });
+            if (countSort % 2 == 0) {
+                document.getElementById("sortScoreIcon").className = "fa fa-sort-numeric-asc";
+            } else document.getElementById("sortScoreIcon").className = "fa fa-sort-numeric-desc";
+            countSort++;
+            displayListStudent(listStudent);
+        }
+
+        function showSuggestion() {
+            var studentsNeedMeetEdu = [];
+            console.log('Lu');
+            var studentsNeedTutorial = [];
+            document.getElementById("suggestion").style.display = "block";
+            listStudent.forEach(({ jsScore, andScore, name }) => {
+                if ((andScore - jsScore) < 1.5) {
+                    studentsNeedMeetEdu.push(name);
+                }
+                if (parseFloat(andScore) < 7) {
+                    studentsNeedTutorial.push(name); 
+                }
+            });
+            console.log("tutorial: ", studentsNeedTutorial);
+            if(studentsNeedTutorial.length > 0){
+                studentsNeedTutorial.forEach(item => {
+                    document.getElementById("tutorial").innerHTML += "<p>The student " + item + " need tutorial</p>"
+                })
+            }
+            if(studentsNeedMeetEdu.length > 0){
+                studentsNeedMeetEdu.forEach(item => {
+                    document.getElementById("meetEdu").innerHTML += "<p>The student " + item + " need to check with educator team</p>"
+                })
+            }
+        }
+
+    </script>
+</body>
+
+</html>
